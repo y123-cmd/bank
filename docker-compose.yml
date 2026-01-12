@@ -1,0 +1,6 @@
+services:
+  bank-api-develop:
+    image: bank-api-develop:latest
+    build: .
+    ports:
+      - "8000:8085"
