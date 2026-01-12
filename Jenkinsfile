@@ -2,20 +2,11 @@ pipeline {
 	agent any
 
 	environment {
-		GITHUB_CREDENTIALS = credentials('github-token') // GitHub token
-		DOCKER_IMAGE = "my-app:latest"                   // Docker image name
-		DOCKER_REGISTRY = "docker.io"                    // Docker registry (Docker Hub)
+		DOCKER_IMAGE = "my-app:latest"
+		DOCKER_REGISTRY = "docker.io"
 	}
 
 	stages {
-		stage('Checkout') {
-			steps {
-				git(
-					url: 'https://github.com/y123-cmd/bank',//yess
-					credentialsId: 'github-token'
-				)
-			}
-		}
 
 		stage('Build Docker Image') {
 			steps {
@@ -28,14 +19,14 @@ pipeline {
 			steps {
 				echo 'Pushing Docker image to registry...'
 				withCredentials([usernamePassword(
-					credentialsId: 'docker-hub-credentials',  // Jenkins Docker credentials ID
+					credentialsId: 'docker-hub-credentials',
 					usernameVariable: 'DOCKER_USER',
 					passwordVariable: 'DOCKER_PASS'
 				)]) {
 					sh '''
-                        echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin $DOCKER_REGISTRY
-                        docker tag $DOCKER_IMAGE $DOCKER_REGISTRY/$DOCKER_USER/$DOCKER_IMAGE
-                        docker push $DOCKER_REGISTRY/$DOCKER_USER/$DOCKER_IMAGE
+                        echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
+                        docker tag $DOCKER_IMAGE $DOCKER_USER/$DOCKER_IMAGE
+                        docker push $DOCKER_USER/$DOCKER_IMAGE
                     '''
 				}
 			}
@@ -44,7 +35,6 @@ pipeline {
 		stage('Test') {
 			steps {
 				echo 'Running tests (if any)...'
-				// Example: sh 'pytest' or any test command
 			}
 		}
 	}
