@@ -11,7 +11,6 @@ pipeline {
 		stage('Checkout') {
 			steps {
 				git(
-				    git branch : 'develop',
 					url: 'https://github.com/y123-cmd/bank',//yess
 					credentialsId: 'github-token'
 				)
